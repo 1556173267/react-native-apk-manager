@@ -105,13 +105,13 @@ import * as ApkManager from 'react-native-apk-manager';
 
 | Method | 	Params | Return Type |
 | :----- | :------ | :---------- |
-| [isAppInstalled()](#isAppInstalled()) | `pageName<string>` | `Promise<boolean>` |
-| [isAppsInstalled()](#isAppsInstalled) | `packageNames<Array<string>>` | `Promise<Array<boolean>>` |
-| [installApk()](#installApk) | `filePath<string>` | `void` |
-| [uninstallApk()](#uninstallApk) | `packageName<string>` | `void` |
-| [openApk()](#openApk) | `packageName<string>` | `void` |
-| [isExpChannel()](#isExpChannel) | `packageName<string>, metaDataName<string>, channel<string>` | `Promise<boolean>` |
-| [isExpChannels()](#isExpChannel) | `packageNames<Array<string>>, metaDataNames<Array<string>>, channels<Array<string>>` | `Promise<Array<boolean>>` |
+| [isAppInstalled()](#isappinstalledpagenamestring-promiseboolean) | `pageName<string>` | `Promise<boolean>` |
+| [isAppsInstalled()](#isappsinstalledpackagenamesarraystringpromisearrayboolean) | `packageNames<Array<string>>` | `Promise<Array<boolean>>` |
+| [installApk()](#installapkfilepathstring) | `filePath<string>` | `void` |
+| [uninstallApk()](#uninstallapkpackagenamestring) | `packageName<string>` | `void` |
+| [openApk()](#openapkpackagenamestring) | `packageName<string>` | `void` |
+| [isExpChannel()](#isexpchannelpackagenamestring-metadatanamestring-channelstringpromiseboolean) | `packageName<string>, metaDataName<string>, channel<string>` | `Promise<boolean>` |
+| [isExpChannels()](#isexpchannelspackagenamesarraystring-metadatanamesarraystring-channelsarraystringpromisearrayboolean) | `packageNames<Array<string>>, metaDataNames<Array<string>>, channels<Array<string>>` | `Promise<Array<boolean>>` |
 
 ### isAppInstalled(`pageName<string>`): `Promise<boolean>`
 
