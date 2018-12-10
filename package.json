@@ -1,0 +1,32 @@
+{
+  "name": "react-native-apk-manager",
+  "version": "1.0.0",
+  "description": "React Native bridging library for android to manager apk.(install apk, uninstall apk, open apk, check app is installed or not, check app is installed or not with channel)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1556173267/react-native-apk-manager.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "apk-manager",
+    "android",
+    "install-apk",
+    "unstall-apk",
+    "check-apk-isinstalled",
+    "open-apk"
+  ],
+  "peerDependencies": {
+    "react-native": ">=0.40"
+  },
+  "author": "superhao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/1556173267/react-native-apk-manager/issues"
+  },
+  "homepage": "https://github.com/1556173267/react-native-apk-manager#readme"
+}

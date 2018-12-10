@@ -1,6 +1,6 @@
 'use strict';
 
-import {NativeModules, Platform } from 'react-native';
+import {NativeModules, Platform, PermissionsAndroid } from 'react-native';
 const apkManagerModule = NativeModules.ApkManagerModule;
 
 export function uninstallApk(packageName) {
@@ -11,7 +11,16 @@ export function uninstallApk(packageName) {
 
 export function installApk(filePath) {
   if (Platform.OS === 'android') {
-    apkManagerModule.installApk(filePath);
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE).then((data) => {
+        if (data === 'granted') {
+          apkManagerModule.installApk(filePath);
+        } else {
+          alert('授权被拒绝');
+        }
+    }).catch((err) => {
+      alert('获取授权失败');
+    });
   }
 }
 
