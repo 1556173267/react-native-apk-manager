@@ -1,6 +1,6 @@
 {
   "name": "react-native-apk-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Native bridging library for android to manager apk.(install apk, uninstall apk, open apk, check app is installed or not, check app is installed or not with channel)",
   "main": "index.js",
   "scripts": {
