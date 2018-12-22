@@ -85,3 +85,73 @@ export function isAppsInstalled(packageNames) {
   }
 
 }
+
+export function getAPKInfomation(apkFile) {
+
+  if (Platform.OS === 'android') {
+    return new Promise((resolve, reject) => {
+      apkManagerModule.getAPKInfomation(apkFile).then((data)=>{
+        resolve(data);
+      }).catch((error)=>{
+        reject(error);
+      });
+    });
+  }
+
+}
+
+export function getAppInfomation(packageName) {
+
+  if (Platform.OS === 'android') {
+    return new Promise((resolve, reject) => {
+      apkManagerModule.getAppInfomation(packageName).then((data)=>{
+        resolve(data);
+      }).catch((error)=>{
+        reject(error);
+      });
+    });
+  }
+
+}
+
+export function getAPKMetaDataByKey(apkFile, key) {
+
+  if (Platform.OS === 'android') {
+    return new Promise((resolve, reject) => {
+      apkManagerModule.getAPKMetaDataByKey(apkFile, key).then((data)=>{
+        resolve(data);
+      }).catch((error)=>{
+        reject(error);
+      });
+    });
+  }
+
+}
+
+export function getAppMetaDataByKey(packageName, key) {
+
+  if (Platform.OS === 'android') {
+    return new Promise((resolve, reject) => {
+      apkManagerModule.getAppMetaDataByKey(packageName, key).then((data)=>{
+        resolve(data);
+      }).catch((error)=>{
+        reject(error);
+      });
+    });
+  }
+
+}
+
+export function getInstalledAppInfo() {
+
+  if (Platform.OS === 'android') {
+    return new Promise((resolve, reject) => {
+      apkManagerModule.getInstalledAppInfo().then((data)=>{
+        resolve(data);
+      }).catch((error)=>{
+        reject(error);
+      });
+    });
+  }
+
+}

@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -16,19 +18,28 @@ import android.util.Log;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.BaseActivityEventListener;
+import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.common.ReactConstants;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.List;
 
 public class ApkManagerModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
@@ -144,7 +155,7 @@ public class ApkManagerModule extends ReactContextBaseJavaModule implements Life
             if (installed) {
                 PackageInfo info = manager.getPackageInfo(packageName,
                         PackageManager.GET_CONFIGURATIONS | PackageManager.GET_META_DATA);
-                String myChannel = info.applicationInfo.metaData.getString(metaDataName);
+                String myChannel = info.applicationInfo.metaData.get(metaDataName).toString();
                 if (myChannel == null) {
                     installed = false;
                 } else if (!myChannel.equals(channel)) {
@@ -175,7 +186,7 @@ public class ApkManagerModule extends ReactContextBaseJavaModule implements Life
                 if (!installed) {
                     PackageInfo info = manager.getPackageInfo(packageName,
                             PackageManager.GET_CONFIGURATIONS | PackageManager.GET_META_DATA);
-                    String myChannel = info.applicationInfo.metaData.getString(metaDataName);
+                    String myChannel = info.applicationInfo.metaData.get(metaDataName).toString();
                     if (myChannel == null) {
                         installed = false;
                     } else if (!myChannel.equals(channel)) {
@@ -244,6 +255,140 @@ public class ApkManagerModule extends ReactContextBaseJavaModule implements Life
             installed = false;
         }
         return installed;
+    }
+
+    @ReactMethod
+    private void getAPKInfomation(String apkFile, final Promise promise) {
+        PackageManager pm = getReactApplicationContext().getPackageManager();
+        PackageInfo info = pm.getPackageArchiveInfo(apkFile, PackageManager.GET_ACTIVITIES);
+        if(info != null){
+            WritableMap map = Arguments.createMap();
+            ApplicationInfo appInfo = info.applicationInfo;
+            String appName = pm.getApplicationLabel(appInfo).toString();
+            String packageName = appInfo.packageName;  // 得到安装包名称
+            String versionName = info.versionName;       // 得到版本信息
+            int versionCode = info.versionCode;  // 得到版本号
+            int installLocation = info.installLocation; // 得到安装位置
+            long  firstInstallTime = info.firstInstallTime; // 得到首次安装时间
+            long lastUpdateTime = info.lastUpdateTime; // 得到最后安装时间
+            map.putString("appName", appName);
+            map.putString("packageName", packageName);
+            map.putString("versionName", versionName);
+            map.putInt("versionCode", versionCode);
+            map.putInt("installLocation", installLocation);
+            map.putDouble("firstInstallTime", firstInstallTime);
+            map.putDouble("lastUpdateTime", lastUpdateTime);
+            promise.resolve(map);
+        } else {
+            promise.reject("400","Get ApkInfomation Fail");
+        }
+    }
+
+    @ReactMethod
+    private void getAppInfomation(String packageName, final Promise promise) {
+
+        PackageManager manager = getReactApplicationContext().getPackageManager();
+        try {
+            PackageInfo info = manager.getPackageInfo(packageName,
+                    PackageManager.GET_CONFIGURATIONS | PackageManager.GET_META_DATA);
+            if(info != null){
+                WritableMap map = Arguments.createMap();
+                ApplicationInfo appInfo = info.applicationInfo;
+                String appName = manager.getApplicationLabel(appInfo).toString();
+                String versionName = info.versionName;       // 得到版本信息
+                int versionCode = info.versionCode;  // 得到版本号
+                int installLocation = info.installLocation; // 得到安装位置
+                long  firstInstallTime = info.firstInstallTime; // 得到首次安装时间
+                long lastUpdateTime = info.lastUpdateTime; // 得到最后安装时间
+                map.putString("appName", appName);
+                map.putString("packageName", packageName);
+                map.putString("versionName", versionName);
+                map.putInt("versionCode", versionCode);
+                map.putInt("installLocation", installLocation);
+                map.putDouble("firstInstallTime", firstInstallTime);
+                map.putDouble("lastUpdateTime", lastUpdateTime);
+                promise.resolve(map);
+            } else {
+                promise.reject("400","Get ApkInfomation Fail");
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            promise.reject("400","Get ApkInfomation Fail");
+            e.printStackTrace();
+        }
+
+    }
+
+    @ReactMethod
+    private void getAPKMetaDataByKey(String apkFile, String key, final Promise promise) {
+        PackageManager pm = getReactApplicationContext().getPackageManager();
+        PackageInfo info = pm.getPackageArchiveInfo(apkFile, PackageManager.GET_ACTIVITIES);
+        if (info != null){
+            ApplicationInfo appInfo = info.applicationInfo;
+            if (appInfo.metaData != null) {
+                String metaData = appInfo.metaData.get(key).toString();
+                promise.resolve(metaData);
+            } else {
+                promise.reject("400","Not Found MetaData");
+            }
+        } else {
+            promise.reject("400","Not Found MetaData");
+        }
+    }
+
+    @ReactMethod
+    private void getAppMetaDataByKey(String packageName, String key, final Promise promise) {
+        PackageManager manager = getReactApplicationContext().getPackageManager();
+        try {
+            PackageInfo info = manager.getPackageInfo(packageName,
+                    PackageManager.GET_CONFIGURATIONS | PackageManager.GET_META_DATA);
+            if (info != null){
+                ApplicationInfo appInfo = info.applicationInfo;
+                if (appInfo.metaData != null) {
+                    String metaData = appInfo.metaData.get(key).toString();
+                    promise.resolve(metaData);
+                } else {
+                    promise.reject("400","Not Found MetaData");
+                }
+            } else {
+                promise.reject("400","Not Found MetaData");
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            promise.reject("400","Not Found MetaData");
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    private void getInstalledAppInfo(final Promise promise) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                List<PackageInfo> packages = getReactApplicationContext().getPackageManager().getInstalledPackages(0);
+                WritableArray arr = Arguments.createArray();
+                for( int i=0; i < packages.size(); i++ ) {
+                    WritableMap map = Arguments.createMap();
+                    PackageInfo info = packages.get(i);
+                    ApplicationInfo appInfo = info.applicationInfo;
+                    String appName = getReactApplicationContext().getPackageManager().getApplicationLabel(appInfo).toString();
+                    String packageName = appInfo.packageName;  // 得到安装包名称
+                    String versionName = info.versionName;       // 得到版本信息
+                    int versionCode = info.versionCode;  // 得到版本号
+                    int installLocation = info.installLocation; // 得到安装位置
+                    long  firstInstallTime = info.firstInstallTime; // 得到首次安装时间
+                    long lastUpdateTime = info.lastUpdateTime; // 得到最后安装时间
+                    map.putString("appName", appName);
+                    map.putString("packageName", packageName);
+                    map.putString("versionName", versionName);
+                    map.putInt("versionCode", versionCode);
+                    map.putInt("installLocation", installLocation);
+                    map.putDouble("firstInstallTime", firstInstallTime);
+                    map.putDouble("lastUpdateTime", lastUpdateTime);
+                    arr.pushMap(map);
+                }
+                promise.resolve(arr);
+            }
+        }.start();
     }
 
     // 注册监听  
