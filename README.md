@@ -112,6 +112,10 @@ import * as ApkManager from 'react-native-apk-manager';
 | [openApk()](#openapkpackagenamestring) | `packageName<string>` | `void` |
 | [isExpChannel()](#isexpchannelpackagenamestring-metadatanamestring-channelstringpromiseboolean) | `packageName<string>, metaDataName<string>, channel<string>` | `Promise<boolean>` |
 | [isExpChannels()](#isexpchannelspackagenamesarraystring-metadatanamesarraystring-channelsarraystringpromisearrayboolean) | `packageNames<Array<string>>, metaDataNames<Array<string>>, channels<Array<string>>` | `Promise<Array<boolean>>` |
+| [getAPKInfomation()](#) | `apkFile<string>` | `Promise<Object>` |
+| [getAppInformation()](#) | `packageName<string>` | `Promise<Object>` |
+| [getAppMetaDataByKey()](#) | `packageName<string>, key<string>` | `Promise<string>` |
+| [getInstalledAppInfo()](#) | `null` | `Promise<Array<Object>>` |
 
 ### isAppInstalled(`pageName<string>`): `Promise<boolean>`
 
@@ -241,5 +245,100 @@ ApkManager.isExpChannels(['com.ownmoduletest', 'com.test', 'xxxxxx'], ['JPUSH_AP
 ApkManager.isExpChannels(['com.ownmoduletest', 'com.test', 'xxxxxx'], ['other_key', 'test_key', 'xxxxxxx'], ['1232444', 'wanted channel', 'wanted channel']).then((data)=> {
   // [false, true, true]
 });
+```
+---
+
+### getAPKInformation(`apkFile<string>`): `Promise<Object>`
+
+Get apk information with apk file path. You can get appName, packageName, versionName, versionCode, installLocation, firstInstallTime, lastUpdateTime.
+
+**Examples**
+
+```js
+   ApkManager.getAPKInfomation('/storage/emulated/0/renlaifeng_download/app-release .apk').then((data)=>{
+      console.log(data);
+      // {appName: "test", packageName: "com.test", versionName: "1.0.0", versionCode: "1", installLocation: 0, firstInstallTime: 0, lastUpdateTime: 0}
+    }).catch((error)=>{
+      console.log(error);
+      // 400 Get ApkInfomation Fail
+    });
+```
+---
+
+### getAppInformation(`packageName<string>`): `Promise<Object>`
+
+Get app information with packageName. You can get appName, packageName, versionName, versionCode, installLocation, firstInstallTime, lastUpdateTime.
+
+**Examples**
+
+```js
+    ApkManager.getAppInfomation('com.test').then((data)=>{
+      console.log(data);
+      // {appName: "test", packageName: "com.test", versionName: "1.0.0", versionCode: "1", installLocation: 0, firstInstallTime: 123234456, lastUpdateTime: 123234456}
+    }).catch((error)=>{
+      console.log(error);
+      // 400 Get AppInfomation Fail
+    });
+```
+---
+
+### getAppMetaDataByKey(`packageName<string>, key<string>`): `Promise<string>`
+
+Get app information with packageName and key(metadata name).
+
+* Before use, you should know app's packageName and key(metadata name) in target AndroidManifest.xml.
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.test"> => // here is the packageName 'com.test'
+    ...
+    <application
+      ...
+      <meta-data android:name="JPUSH_APPKEY" android:value="1232444"/> => // here is the metaDataName 'JPUSH_APPKEY'
+      <meta-data android:name="JPUSH_CHANNEL" android:value="test"/> => // here is the metaDataName 'JPUSH_CHANNEL'
+      ...
+    </application>
+</manifest>
+```
+
+**Examples**
+
+```js
+    ApkManager.getAppMetaDataByKey('com.test', 'JPUSH_CHANNEL').then((data)=>{
+      console.log(data);
+      // test
+    }).catch((error)=>{
+      console.log(error);
+      // Not Found MetaData
+    });
+    
+    ApkManager.getAppMetaDataByKey('com.test', 'JPUSH_APPKEY').then((data)=>{
+      console.log(data);
+      // 1232444
+    }).catch((error)=>{
+      console.log(error);
+      // Not Found MetaData
+    });
+```
+---
+
+### getInstalledAppInfo(): `Promise<Array<Object>>`
+
+Get all your installed app information. You can get appName, packageName, versionName, versionCode, installLocation, firstInstallTime, lastUpdateTime.
+
+**Examples**
+
+```js
+    ApkManager.getInstalledAppInfo().then((data)=>{
+      console.log(data);
+      /* [
+      {appName: "installedApp", packageName: "com.installedApp", versionName: "1.0.0", versionCode: "1", installLocation: 0, firstInstallTime: 123234456, lastUpdateTime: 123234456},
+      {appName: "installedApp1", packageName: "com.installedApp1", versionName: "1.0.0", versionCode: "1", installLocation: 0, firstInstallTime: 123234456, lastUpdateTime: 123234456},
+      {appName: "installedApp2", packageName: "com.installedApp2", versionName: "1.0.0", versionCode: "1", installLocation: 0, firstInstallTime: 123234456, lastUpdateTime: 123234456}
+      ]
+      */
+    }).catch((error)=>{
+      console.log(error);
+      // 400 Get AppInfomation Fail
+    });
 ```
 ---
