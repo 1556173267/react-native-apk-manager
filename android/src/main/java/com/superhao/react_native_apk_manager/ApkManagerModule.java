@@ -258,7 +258,7 @@ public class ApkManagerModule extends ReactContextBaseJavaModule implements Life
     }
 
     @ReactMethod
-    private void getAPKInfomation(String apkFile, final Promise promise) {
+    private void getAPKInformation(String apkFile, final Promise promise) {
         PackageManager pm = getReactApplicationContext().getPackageManager();
         PackageInfo info = pm.getPackageArchiveInfo(apkFile, PackageManager.GET_ACTIVITIES);
         if(info != null){
@@ -285,7 +285,7 @@ public class ApkManagerModule extends ReactContextBaseJavaModule implements Life
     }
 
     @ReactMethod
-    private void getAppInfomation(String packageName, final Promise promise) {
+    private void getAppInformation(String packageName, final Promise promise) {
 
         PackageManager manager = getReactApplicationContext().getPackageManager();
         try {
@@ -309,10 +309,10 @@ public class ApkManagerModule extends ReactContextBaseJavaModule implements Life
                 map.putDouble("lastUpdateTime", lastUpdateTime);
                 promise.resolve(map);
             } else {
-                promise.reject("400","Get ApkInfomation Fail");
+                promise.reject("400","Get AppInfomation Fail");
             }
         } catch (PackageManager.NameNotFoundException e) {
-            promise.reject("400","Get ApkInfomation Fail");
+            promise.reject("400","Get AppInfomation Fail");
             e.printStackTrace();
         }
 

@@ -86,11 +86,11 @@ export function isAppsInstalled(packageNames) {
 
 }
 
-export function getAPKInfomation(apkFile) {
+export function getAPKInformation(apkFile) {
 
   if (Platform.OS === 'android') {
     return new Promise((resolve, reject) => {
-      apkManagerModule.getAPKInfomation(apkFile).then((data)=>{
+      apkManagerModule.getAPKInformation(apkFile).then((data)=>{
         resolve(data);
       }).catch((error)=>{
         reject(error);
@@ -100,11 +100,11 @@ export function getAPKInfomation(apkFile) {
 
 }
 
-export function getAppInfomation(packageName) {
+export function getAppInformation(packageName) {
 
   if (Platform.OS === 'android') {
     return new Promise((resolve, reject) => {
-      apkManagerModule.getAppInfomation(packageName).then((data)=>{
+      apkManagerModule.getAppInformation(packageName).then((data)=>{
         resolve(data);
       }).catch((error)=>{
         reject(error);
