@@ -112,10 +112,10 @@ import * as ApkManager from 'react-native-apk-manager';
 | [openApk()](#openapkpackagenamestring) | `packageName<string>` | `void` |
 | [isExpChannel()](#isexpchannelpackagenamestring-metadatanamestring-channelstringpromiseboolean) | `packageName<string>, metaDataName<string>, channel<string>` | `Promise<boolean>` |
 | [isExpChannels()](#isexpchannelspackagenamesarraystring-metadatanamesarraystring-channelsarraystringpromisearrayboolean) | `packageNames<Array<string>>, metaDataNames<Array<string>>, channels<Array<string>>` | `Promise<Array<boolean>>` |
-| [getAPKInfomation()](#) | `apkFile<string>` | `Promise<Object>` |
-| [getAppInformation()](#) | `packageName<string>` | `Promise<Object>` |
-| [getAppMetaDataByKey()](#) | `packageName<string>, key<string>` | `Promise<string>` |
-| [getInstalledAppInfo()](#) | `null` | `Promise<Array<Object>>` |
+| [getAPKInfomation()](#getapkinformationapkfilestring-promiseobject) | `apkFile<string>` | `Promise<Object>` |
+| [getAppInformation()](#getappinformationpackagenamestring-promiseobject) | `packageName<string>` | `Promise<Object>` |
+| [getAppMetaDataByKey()](#getappmetadatabykeypackagenamestring-keystring-promisestring) | `packageName<string>, key<string>` | `Promise<string>` |
+| [getInstalledAppInfo()](#getinstalledappinfo-promisearrayobject) | `null` | `Promise<Array<Object>>` |
 
 ### isAppInstalled(`pageName<string>`): `Promise<boolean>`
 
