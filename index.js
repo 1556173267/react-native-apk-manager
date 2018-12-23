@@ -90,11 +90,23 @@ export function getAPKInformation(apkFile) {
 
   if (Platform.OS === 'android') {
     return new Promise((resolve, reject) => {
-      apkManagerModule.getAPKInformation(apkFile).then((data)=>{
-        resolve(data);
-      }).catch((error)=>{
-        reject(error);
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE).then((data) => {
+        if (data === 'granted') {
+          apkManagerModule.getAPKInformation(apkFile).then((data)=>{
+            resolve(data);
+          }).catch((error)=>{
+            reject(error);
+          });
+        } else {
+          reject("auth fail");
+          alert('授权被拒绝');
+        }
+      }).catch((err) => {
+        reject("auth fail");
+        alert('获取授权失败');
       });
+
     });
   }
 
@@ -118,11 +130,24 @@ export function getAPKMetaDataByKey(apkFile, key) {
 
   if (Platform.OS === 'android') {
     return new Promise((resolve, reject) => {
-      apkManagerModule.getAPKMetaDataByKey(apkFile, key).then((data)=>{
-        resolve(data);
-      }).catch((error)=>{
-        reject(error);
+
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE).then((data) => {
+        if (data === 'granted') {
+          apkManagerModule.getAPKMetaDataByKey(apkFile, key).then((data)=>{
+            resolve(data);
+          }).catch((error)=>{
+            reject(error);
+          });
+        } else {
+          reject("auth fail");
+          alert('授权被拒绝');
+        }
+      }).catch((err) => {
+        reject("auth fail");
+        alert('获取授权失败');
       });
+
     });
   }
 
